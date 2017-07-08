@@ -21,7 +21,7 @@
   tasks:
     - name: Group repo servers by architecture and os version
       group_by:
-        key: repo_servers_{{ ansible_distribution_version }}_{{ ansible_architecture }}
+        key: repo_servers_{{ ansible_distribution_version.split('.')[0] }}.{{ ansible_distribution_version.split('.')[1] }}_{{ ansible_architecture }}
   tags:
     - always
     - repo-build
@@ -38,7 +38,7 @@
         name: "{{ item }}"
         groups: repo_masters
       when:
-        - "item in groups['repo_servers_' + ansible_distribution_version + '_' + ansible_architecture][0]"
+        - "item in groups['repo_servers_' + ansible_distribution_version.split('.')[0] + '.' + ansible_distribution_version.split('.')[1] + '_' + ansible_architecture][0]"
       with_inventory_hostnames:
         - repo_all
   tags:
